@@ -1,0 +1,4 @@
+import {mkdtempSync,rmSync} from 'node:fs';import os from 'node:os';import path from 'node:path';import {spawnSync} from 'node:child_process';
+const root=path.resolve(import.meta.dirname,'..'),temp=mkdtempSync(path.join(os.tmpdir(),'quality-demo-'));
+const env={...process.env,DATABASE_URL:'',DATA_DIR:path.join(temp,'db'),OUTPUT_DIR:path.join(root,'.data/demo')};
+try{for(const [script,...args] of [['migrate.mjs'],['seed.mjs'],['quality.mjs','review-queue'],['quality.mjs','calibration'],['quality.mjs','coaching-due'],['view.mjs'],['docs.mjs']]){const r=spawnSync(process.execPath,[path.join(root,'scripts',script),...args],{cwd:root,env,stdio:'inherit'});if(r.status!==0)throw Error('Demo failed: '+script);}console.log('Demo HTML is in .data/demo. No business database used.');}finally{rmSync(temp,{recursive:true,force:true});}

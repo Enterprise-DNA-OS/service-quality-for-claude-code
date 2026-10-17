@@ -1,14 +1,9 @@
 ---
-description: Make this system yours in plain language. Add a field, rename stages, change a rule, add a column to a document. Writes the migration, applies it, updates the commands that touch it.
+description: "Make the quality desk fit the business"
 ---
 
-The operator will describe a change in their own words, for example "add a PO number to every order", "our stages are Enquiry, Site Visit, Quoted, Booked, Done", "invoices are due in 14 days not 20", "put the account manager on the client statement".
+# Make the quality desk fit the business
 
-1. Read `CLAUDE.md`, the current schema in `supabase/migrations/`, and any command or document that touches the thing being changed. Say back in one line what you are about to change and where.
-2. Write the next numbered migration in `supabase/migrations/` (never edit an applied one). Keep names plain and lowercase. Default new columns sensibly so existing rows stay valid.
-3. Run `npm run migrate`. If it fails, fix the SQL and run it again.
-4. Update every place the change shows up: the CLI output, the affected slash commands, `views.json`, the document templates, the import mapping, and the README command table.
-5. Run `npm test`. Add an assertion for the new behaviour if the change is visible in a command's output.
-6. Update `brand.json` if the change is a branding one (business name, logo, colours) instead of a schema one, and rerun `npm run docs` or `npm run view` to show it.
+Read CLAUDE.md, docs/cli.md and the current migrations. Identify the field, scorecard rule or wording the operator wants changed. Explain its effect on existing evidence. Write a new numbered migration and update the CLI allowlist, docs and relevant tests. Apply with npm run migrate and run npm test, npm run view and npm run docs.
 
-Report in three lines: what changed, the migration file, the commands that now show it. Never delete a column or a table without an explicit yes in this session.
+Never edit an applied migration or silently rewrite final reviews. Used scorecards are locked: create a fresh scorecard version with its criteria, then use it for future assessments. Do not change historical scores to make a new rule look like the old rule. Back up the real database before applying approved changes. Keep all sends as drafts.

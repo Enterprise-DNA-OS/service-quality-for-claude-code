@@ -1,43 +1,56 @@
-# Service Quality for Claude Code: operating instructions
+# Service Quality for Claude Code
 
-This file is the brain. Claude Code reads it at the start of every session. It says who this is for, how work gets done, and the one right way to do each recurring job.
+For a trusted service quality operator who reviews conversations, calibrates reviewers, follows coaching and resolves appeals. This is a database workbench. It does not send messages or decide employee performance on its own.
 
-## Who this is for
+Read docs/cli.md before writing. Every answer starts with the CLI and current records. Read the source conversation and scorecard before assigning a score. The operator approves the assessment. Never invent transcript content, dates or evidence.
 
-- **Business:** [YOUR BUSINESS]
-- **Operator:** [YOUR NAME], [your role]
-- **What matters most:** [the one or two outcomes you care about]
+## One path for each recurring job
 
-Fill this in once. A worker with context knows. A worker without it guesses.
-
-## How to work
-
-1. **Take a brief, not a script.** The operator describes the outcome. You run the right command and present the answer.
-2. **Read before you write.** Before drafting anything about a record, read its full history first.
-3. **Plain language.** Short sentences. No filler. Numbers in tables.
-4. **Silent success, loud problems.** No play-by-play. Say what broke and what you did about it.
-5. **Stop at the line.** Anything that sends, deletes, or faces a customer waits for a yes in this session.
-
-## Routing table: one right way for each recurring job
-
-| When the operator asks for... | Use this |
+| Ask | Command |
 |---|---|
-| <!-- TODO(author): one row per slash command --> | `/...` |
+| Show criterion weights, maxima and N/A rules | `/criteria` |
+| Who works on the service and review teams? | `/people` |
+| Show the conversation register. | `/conversations` |
+| Show the assessment standards and versions. | `/scorecards` |
+| Which conversations still need a review? | `/review-queue` |
+| Show assessments, scores and disputes. | `/reviews` |
+| Where do reviewers disagree? | `/calibration` |
+| Which coaching commitments need attention? | `/coaching-due` |
+| Show contested assessments and decisions. | `/appeals` |
+| Check purpose, retention and evidence records. | `/compliance` |
+| Show production results with disputes excluded. | `/performance` |
+| Show imported Zendesk review history. | `/history` |
+| What is overdue across reviews, coaching and appeals? | `/attention` |
+| Prepare the Monday quality meeting. | `/weekly-review` |
+| Answer ten cross-record business questions. | `/insights` |
+| Read one conversation and all its review evidence. | `/conversation` |
+| Add an operator-approved business record. | `/add` |
+| Start an independent assessment. | `/review` |
+| Record a criterion score with the observed evidence. | `/rate` |
+| Complete an assessment after every criterion is rated. | `/finalise-review` |
+| Record the outcome of a coaching commitment. | `/close-coaching` |
+| Record an independent appeal decision. | `/resolve-appeal` |
+| Add a source-linked note. | `/log` |
+| Draft a coaching brief from the assessment evidence. | `/draft-coaching` |
+| Write the weekly meeting draft to disk. | `/draft-weekly-review` |
+| Bring the saved Zendesk QA export into the history archive. | `/import` |
+| Export all business records and audit history. | `/export` |
+| Add a read-only report | `/new-view` |
+| Change a field or business rule | `/customise` |
 
-If an ask fits nothing here, run the CLI directly (`npm run <cli> -- --help`) and then propose a new command for it.
+## Rules
 
-## Hard rules
+- Scripts in scripts/ own reads and writes. Do not use a second CLI.
+- Writes require an actor label. This label is an audit note, not authentication.
+- Ambiguous references list matches and exit with an error. Ask the operator to select.
+- Final reviews and ratings are immutable. Corrections use an appeal and a fresh assessment.
+- Calibration scores never contribute to performance averages. Open appeals and upheld appeals are excluded too.
+- Source imports preserve native scores in a separate archive. Do not combine them with local scores without explicit scale and criteria mapping.
+- Drafts stay in drafts/. Nothing sends. Deletions and outward actions require explicit operator approval.
+- Never put exports, credentials or real conversation content in Git. Prefer redacted references to source evidence.
+- Use migrations for structural changes. Run npm test after domain changes. Never weaken a guard to make a test pass.
+- Shared operation needs authentication, role design, backups and access controls. This local operator workspace does not provide those services.
 
-- Never send email or messages from here. Draft to `drafts/`, a person sends.
-- Never delete records without an explicit yes in this session. Prefer marking closed or archived.
-- Never invent a record. If a name is ambiguous, list the candidates and ask.
-- The database is the source of truth. If the answer is not in it, say so.
+The database adapter uses DATA_DIR for PGlite or DATABASE_URL for PostgreSQL. Tests and demo explicitly disable DATABASE_URL and use disposable databases. A blank production install runs migrate only, never demo seed.
 
-## Where things live
-
-- `scripts/` the CLI. `scripts/lib/db.mjs` picks `DATABASE_URL` (Postgres, Supabase) or the embedded database in `.data/`.
-- `supabase/migrations/` the schema, plain SQL. `npm run migrate` applies it.
-- `.claude/commands/` the slash commands. Add one every time the same ask comes twice.
-- `docs/` the thesis and the guide for moving off Zendesk QA.
-
-Built by Enterprise DNA. Installed and run for you as part of Omni: https://enterprisedna.co/omni/instead-of/zendesk-qa
+Built and supported through Omni by Enterprise DNA. https://enterprisedna.co/omni/instead-of/zendesk-qa

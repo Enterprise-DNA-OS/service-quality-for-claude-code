@@ -1,115 +1,93 @@
-<h1 align="center">Service Quality for Claude Code</h1>
+# Service Quality for Claude Code
 
-<p align="center">
-  <strong>The open-source service quality desk that is just a database and Claude Code.</strong>
-</p>
+Your service quality reviews, calibration, appeals and coaching in a database you own. A free operator workspace for teams replacing the manual quality desk within Zendesk QA.
 
-<p align="center">
-  Created by <a href="https://www.enterprisedna.co"><strong>Enterprise DNA</strong></a>. Free and open source. Works with Claude Code, Codex, OpenCode or Cursor.
-</p>
+## Three ways to use it
 
-<!-- three-doors -->
-<table align="center">
-  <tr>
-    <td align="center"><strong>Do it yourself</strong><br/>Clone it, run it, own it. Free, MIT.<br/><a href="#quick-start">Quick start</a></td>
-    <td align="center"><strong>We customise it</strong><br/>Your fields, your rules, your Zendesk QA data brought across.<br/><a href="https://enterprisedna.co/omni/book/?utm_source=github&utm_medium=readme&utm_campaign=zendesk-qa">Book a call</a></td>
-    <td align="center"><strong>We run it for you</strong><br/>Installed, connected and operated inside Omni. Setup fee, then a retainer.<br/><a href="https://enterprisedna.co/omni/instead-of/zendesk-qa?utm_source=github&utm_medium=readme&utm_campaign=zendesk-qa">How it works</a></td>
-  </tr>
-</table>
+**Do it yourself.** MIT licensed. Install it, try fictional records, bring a saved Zendesk QA export and adapt the scorecards. Runs with Claude Code, Codex, OpenCode or Cursor.
 
-<p align="center">
-  <a href="#what-is-this">What is this</a> &bull;
-  <a href="#why-no-front-end">Why no front end</a> &bull;
-  <a href="#quick-start">Quick start</a> &bull;
-  <a href="#the-commands">Commands</a> &bull;
-  <a href="#instead-of-zendesk-qa">Instead of Zendesk QA</a> &bull;
-  <a href="#want-it-installed-and-run-for-you">Installed for you</a> &bull;
-  <a href="#license">License</a>
-</p>
+**We customise it.** Enterprise DNA brings your history across and builds your scorecards, coaching rules and reports. A web front end, another stack and helpdesk connections are scoped to your business. One setup fee, then a retainer.
 
-<p align="center">
-  <img src="https://img.shields.io/badge/Node-20+-339933?style=flat-square" alt="Node 20+" />
-  <img src="https://img.shields.io/badge/PostgreSQL-any-336791?style=flat-square" alt="PostgreSQL" />
-  <img src="https://img.shields.io/badge/PGlite-embedded-3ecf8e?style=flat-square" alt="PGlite" />
-  <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" alt="MIT License" />
-</p>
+**We run it for you.** Omni by Enterprise DNA installs, connects and operates your version with the rest of your business. One setup fee, then a monthly retainer. [Book a call](https://enterprisedna.co/omni/book?offer=replace-software&utm_campaign=zendesk-qa&utm_medium=github).
 
----
+## Try it
 
-## What is this
-
-Service Quality for Claude Code does the job you pay Zendesk QA for, as a Postgres database and a set of agent commands. There is no web front end. You open the folder in [Claude Code](https://claude.com/claude-code) (or Codex, OpenCode, Cursor: see `AGENTS.md`) and ask for what you want in plain language. It runs the right query, and it can answer questions the Zendesk QA dashboard cannot.
-
-<!-- TODO(author): the annual bill. One sentence: what a 10 to 50 person business typically pays Zendesk QA per year, all in, with a source. -->
-
-Want the same thing with a web front end, or built on a different stack? That is a customisation, and it is exactly what Enterprise DNA does: [book a call](https://enterprisedna.co/omni/book/?utm_source=github&utm_medium=readme&utm_campaign=zendesk-qa).
-
-<!-- TODO(author): two or three sentences on what this specific product covers and who it is for. -->
-
-## Why no front end
-
-- The front end was only ever there because the database was hard to talk to. That is no longer true.
-- Your data sits in plain Postgres tables you own. Any tool can read them. No export, no lock-in.
-- No seats, no tiers, no add-ons. Read [docs/why-no-front-end.md](docs/why-no-front-end.md) for the honest trade-offs too.
-
-## Quick start
-
-Sixty seconds, no database install (an embedded Postgres runs inside Node):
+Node 22.15 or newer. Windows, Linux or macOS. The local trial needs no database server.
 
 ```bash
-git clone https://github.com/Enterprise-DNA-OS/service-quality-for-claude-code.git
-cd service-quality-for-claude-code
 npm install
+npm test
 npm run demo
 ```
 
-Then open the folder in Claude Code and type a slash command. <!-- TODO(author): name the first command to try. -->
+Demo reports and paperwork are written under .data/demo. The database used by demo is disposable. Tests and demo never use DATABASE_URL.
 
-### Use it with your own Postgres or Supabase
+For a local working copy with fictional records:
 
-Copy `.env.example` to `.env`, set `DATABASE_URL`, then `npm run migrate`. Same commands, shared data, no per-seat fee.
-
-## The commands
-
-<!-- TODO(author): a table of the slash commands in .claude/commands and what each one does. -->
-
-| Command | What it does |
-|---|---|
-| `/...` | ... |
-
-## Instead of zendesk-qa
-
-<!-- TODO(author): how to bring data across from Zendesk QA; link docs/replace-zendesk-qa.md -->
-
-## Architecture
-
-```
-service-quality-for-claude-code/
-  CLAUDE.md                 how the operator wants this run (routing table + house rules)
-  AGENTS.md                 the same, for Codex / OpenCode / Cursor / Gemini CLI
-  .claude/commands/         the slash commands
-  scripts/                  the CLI the commands drive
-  scripts/lib/db.mjs        one adapter: DATABASE_URL (pg) or embedded PGlite
-  supabase/migrations/      plain SQL schema
-  supabase/seed.sql         demo data
-  docs/                     the thesis and the migration guide
+```bash
+npm run migrate
+npm run seed
+npm run quality -- weekly-review
+npm run quality -- insights --json
+npm run view
+npm run docs
 ```
 
-## Built for coding agents
+Start a real empty database with migrate only. DATA_DIR selects the embedded PGlite data folder. DATABASE_URL selects PostgreSQL 15 or newer, with certificate verification for remote connections. Keep private records out of Git.
 
-The database, CLI and command recipes work with Claude Code, Codex, OpenCode or Cursor. Ask your coding agent for a new command and have it implement and test the change against the same records.
+## What ships
 
-## Contributing
+29 slash commands cover the weekly review queue, scorecards, evidence-based ratings, calibration, coaching, appeals, native history imports, drafts and customisation. Three branded HTML reports show the week, calibration and evidence. Assessment records and coaching plans render through npm run docs. Change business name, logo and colours in brand.json.
 
-Issues and pull requests are welcome. Keep the shape: plain SQL, a small CLI, a slash command per recurring job, no front end.
+The local score is the weighted mean of criterion scores, each divided by its own maximum, expressed out of 100. A zero on a critical criterion makes the entire review zero. N/A is permitted only on configured criteria and removes that criterion's weight. Finalisation requires every criterion and at least one applicable rating. A scorecard's criteria lock as soon as a review uses it.
 
-## Want it installed and run for you?
+Calibration is separate from production. Open appeals and upheld appeals are excluded from performance averages. An upheld appeal withdraws the original result without rewriting its evidence and returns the conversation to the review queue. A fresh reviewer or scorecard version records a replacement assessment. Coaching closure records evidence; it does not erase a critical failure.
 
-Enterprise DNA installs Service Quality for Claude Code for your business, migrates your Zendesk QA data, connects it to the rest of your tools, and runs it for you as part of **Omni**, our managed Command Center. One setup fee, then a monthly retainer.
+This is a trusted operator tool, not a self-service staff portal. The actor label records who the operator says performed a write. It is not authenticated identity. Row security denies generic database roles, but the database owner can administer the records and controls. Audit entries are append-only through ordinary writes, not tamper-proof against that owner.
 
-- Book a call: [enterprisedna.co/omni/book](https://enterprisedna.co/omni/book/?offer=replace-software&utm_source=github&utm_medium=readme&utm_campaign=zendesk-qa)
-- Read more: [enterprisedna.co/omni/instead-of/zendesk-qa](https://enterprisedna.co/omni/instead-of/zendesk-qa?utm_source=github&utm_medium=readme&utm_campaign=zendesk-qa)
+## Bring your Zendesk QA history
 
-## License
+```bash
+npm run quality -- import zendesk ./imports/reviews.json --workspace=service-team --dry-run
+npm run quality -- import zendesk ./imports/reviews.json --workspace=service-team --actor=Operator
+npm run quality -- history
+npm run quality -- export
+```
 
-MIT. Copyright (c) 2026 Enterprise DNA.
+[The switch guide](docs/replace-zendesk-qa.md) explains how an administrator saves the native JSON export, collects all pages and compares counts. One command imports the saved export. The native source score, ratings, review comments, conversation comments and identifiers are retained. They remain historical records, separate from the local scoring system. No universal CSV review export is assumed. Voice transcripts and dashboard metrics are not included by Zendesk's export.
+
+## Ten questions to ask today
+
+These run in npm run quality -- insights. They join local business records beyond a single summary chart. They are not a claim that Zendesk cannot produce an equivalent custom report.
+
+1. Which overdue conversations have no production review?
+2. Which critical failures still have overdue coaching?
+3. Where do reviewers disagree on the same conversation?
+4. Which disputed scores are excluded from performance averages?
+5. Which teams have the largest overdue review backlog?
+6. Which conversation records need a retention decision?
+7. Which source conversations lack purpose or evidence?
+8. Which agents have both coaching due and an open appeal?
+9. Which scorecard versions are driving critical failures?
+10. Which coaching commitments fall due in the next week?
+
+## Your first hour: ten things to ask for
+
+1. Show overdue reviews with the responsible agent.
+2. Compare the reviewers who scored the same conversation.
+3. Read the source and assessment before drafting coaching.
+4. Show the scorecards and the weight of each criterion.
+5. Explain why a disputed score is absent from the performance report.
+6. Draft this week's quality meeting without sending it.
+7. Preview a saved Zendesk export and check its record count.
+8. Put our name and logo on assessment records.
+9. Add a report for team leads with /new-view.
+10. Add our escalation rule through /customise and a fresh scorecard version.
+
+## Scope and evidence
+
+[CLI reference](docs/cli.md), [compliance checks](docs/compliance.md), [research](docs/research.md) and [why no front end](docs/why-no-front-end.md) describe the boundaries.
+
+The base handles human-reviewed service quality operations. It does not replace ticket handling, voice recording, automatic assessment of every conversation or employee login. Enterprise DNA scopes those connections and screens in a custom version. Do not switch off a helpdesk when you replace its quality desk.
+
+The GitHub workflow runs the test and demo on Windows and Linux and the same domain checks against PostgreSQL. npm run test:postgres requires TEST_DATABASE_URL pointing to a disposable local database.

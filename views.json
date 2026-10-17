@@ -1,13 +1,47 @@
 [
   {
     "name": "week",
-    "title": "This week",
-    "subtitle": "Service Quality for Claude Code: what needs attention, rendered by npm run view",
+    "title": "Service quality this week",
+    "subtitle": "Fictional records in the demo. Internal planning, human review required.",
     "sections": [
       {
-        "title": "Needs attention",
-        "note": "TODO(author): point this at the industry's attention view (overdue, stuck, quiet).",
-        "sql": "select 'replace me' as item, 'TODO(author)' as why"
+        "title": "Reviews to complete",
+        "sql": "select source_id,name,agent,channel,review_due,days_overdue from v_review_queue order by review_due"
+      },
+      {
+        "title": "Coaching commitments",
+        "sql": "select source_id,name,agent,owner,due_on,days_overdue from v_coaching_due order by due_on"
+      }
+    ]
+  },
+  {
+    "name": "calibration",
+    "title": "Reviewer calibration",
+    "sections": [
+      {
+        "title": "Score spread",
+        "sql": "select * from v_calibration order by spread desc",
+        "note": "Calibration never contributes to production performance."
+      },
+      {
+        "title": "Production performance",
+        "sql": "select team,agent,count(*) reviews,round(avg(score),2) average_score from v_scores where kind='production' and status='final' and not under_appeal and not withdrawn group by team,agent",
+        "note": "Draft, disputed and withdrawn assessments are excluded."
+      }
+    ]
+  },
+  {
+    "name": "evidence",
+    "title": "Evidence and appeals",
+    "sections": [
+      {
+        "title": "Record checks",
+        "sql": "select * from v_compliance order by rule,record",
+        "note": "Checks support human review. They do not certify compliance."
+      },
+      {
+        "title": "Appeals",
+        "sql": "select a.source_id,s.agent,s.conversation,a.reason,a.due_on,a.status from appeals a join v_scores s on s.id=a.review_id order by a.due_on"
       }
     ]
   }

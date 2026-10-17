@@ -1,0 +1,52 @@
+{
+  "conversations": [
+    {
+      "externalId": "9001",
+      "workspaceId": "demo",
+      "url": "https://example.zendesk.com/qa/conversations/9001",
+      "externalUrl": "https://example.zendesk.com/agent/tickets/9001",
+      "lastUpdated": "2026-09-15T10:00:00Z",
+      "reviews": [
+        {
+          "id": "review-9001",
+          "reviewer": {
+            "email": "reviewer@example.test",
+            "name": "Example Reviewer"
+          },
+          "reviewee": {
+            "email": "agent@example.test",
+            "name": "Example Agent"
+          },
+          "score": 85,
+          "ratings": [
+            {
+              "categoryId": "resolution",
+              "categoryName": "Correct resolution",
+              "score": 85,
+              "weight": 1,
+              "critical": false,
+              "cause": "Follow-up needed"
+            }
+          ],
+          "comment": "Fictional review export, not a customer record.",
+          "thread": [],
+          "tags": [],
+          "created": "2026-09-15T09:00:00Z",
+          "updated": "2026-09-15T10:00:00Z",
+          "received": true,
+          "reviewTime": "2026-09-15T09:00:00Z",
+          "scorecard": {
+            "id": "card-1",
+            "name": "Example source card"
+          }
+        }
+      ],
+      "comments": []
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "pageSize": 50,
+    "total": 1
+  }
+}

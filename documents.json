@@ -1,11 +1,43 @@
 [
   {
-    "name": "example",
-    "title": "TODO(author): the first document this industry must produce",
-    "for_each": "select gen_random_uuid() as id, 'Example' as name",
+    "name": "review-pack",
+    "title": "Conversation assessment record",
+    "for_each": "select id,source_id name from conversations",
     "file": "name",
     "sections": [
-      { "title": "Details", "sql": "select 'replace me' as item, $1::text as record_id" }
+      {
+        "title": "Source reference",
+        "sql": "select source_id,name,channel,occurred_on,evidence,purpose from conversations where id=$1"
+      },
+      {
+        "title": "Assessments",
+        "sql": "select source_id,agent,reviewer,scorecard,version,kind,status,score,critical_failure,under_appeal,withdrawn from v_scores where conversation=(select source_id from conversations where id=$1)"
+      },
+      {
+        "title": "Reasons",
+        "sql": "select r.source_id review,k.name criterion,a.score,a.not_applicable,a.reason from ratings a join reviews r on r.id=a.review_id join criteria k on k.id=a.criterion_id where r.conversation_id=$1"
+      },
+      {
+        "title": "Appeal decisions",
+        "sql": "select a.source_id,a.reason,a.status,a.decision,a.decided_on from appeals a join reviews r on r.id=a.review_id where r.conversation_id=$1"
+      }
+    ]
+  },
+  {
+    "name": "coaching-plan",
+    "title": "Coaching action record",
+    "for_each": "select id,source_id name from coaching",
+    "file": "name",
+    "sections": [
+      {
+        "title": "Commitment",
+        "sql": "select h.source_id,h.name,p.name owner,h.due_on,h.status,h.resolution,h.closed_on from coaching h join people p on p.id=h.owner_id where h.id=$1"
+      },
+      {
+        "title": "Assessment context",
+        "sql": "select s.agent,s.conversation,s.score,s.critical_failure,s.under_appeal,s.withdrawn from v_scores s join coaching h on h.review_id=s.id where h.id=$1",
+        "note": "Review an open appeal before using this action in a performance decision."
+      }
     ]
   }
 ]
